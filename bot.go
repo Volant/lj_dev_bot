@@ -10,8 +10,8 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	_ "github.com/mattn/go-sqlite3"
 
-	"./rating"
-  "./ljtop"
+	"github.com/Volant/lj-dev-bot/ljtop"
+	"github.com/Volant/lj-dev-bot/rating"
 )
 
 type Configuration struct {
@@ -49,25 +49,28 @@ func main() {
 
 		log.Printf("[%s] wrote: [%s]", update.Message.From.UserName, update.Message.Text)
 
-    req_rating := regexp.MustCompile("^[/\\+]")
-    req_ljtop := regexp.MustCompile("^/ljtop")
-    req_help := regexp.MustCompile("^/help")
-    switch {
-    case req_help.MatchString(update.Message.Text):
-      var msg tgbotapi.MessageConfig
-      msg = tgbotapi.NewMessage(update.Message.Chat.ID, `It is LJ Tiny SWD's bot. Available commands
+		req_rating := regexp.MustCompile("^[/\\+]")
+		req_ljtop := regexp.MustCompile("^/ljtop")
+		req_help := regexp.MustCompile("^/help")
+		switch {
+		case req_help.MatchString(update.Message.Text):
+			var msg tgbotapi.MessageConfig
+			msg = tgbotapi.NewMessage(update.Message.Chat.ID, `It is LJ Tiny SWD's bot. Available commands
 /+ in reply to message - increase rating
 /ljtop [COUNTRY] - get LJ Rating for selected COUNTRY
 /help - this text`)
 
-      bot.Send(msg)
-    case req_ljtop.MatchString(update.Message.Text):
-      var msg tgbotapi.MessageConfig
-      _ = ljtop.GetLJTop("cyr")
-      msg = tgbotapi.NewMessage(update.Message.Chat.ID, "LJ Rating will be here")
+			bot.Send(msg)
+		case req_ljtop.MatchString(update.Message.Text):
+			var msg tgbotapi.MessageConfig
+			rating := ljtop.GetLJTop("cyr")
+			for k, v := range rating {
+				fmt.Printf("[%d]: [%s]\n", k, v)
+			}
+			msg = tgbotapi.NewMessage(update.Message.Chat.ID, "LJ Rating will be here")
 
-      bot.Send(msg)
-    case req_rating.MatchString(update.Message.Text):
+			bot.Send(msg)
+		case req_rating.MatchString(update.Message.Text):
 			var msg tgbotapi.MessageConfig
 			if update.Message.ReplyToMessage != nil {
 
@@ -87,6 +90,6 @@ func main() {
 			}
 
 			bot.Send(msg)
-    }
+		}
 	}
 }
