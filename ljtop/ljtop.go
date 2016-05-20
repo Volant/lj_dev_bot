@@ -26,10 +26,15 @@ type (
 	}
 
 	RatingResponse struct {
+    Result  struct {
+      Rating  []struct {
+        PostUrl string `json:"post_url"`
+      } `json:"rating"`
+    } `json:"result"`
 	}
 )
 
-func GetLJTop(country string) []string {
+func GetLJTop(country string) RatingResponse {
 
 	rating_req := RatingRequest{}
 	rating_req.RPCVersion = "2.0"
@@ -37,37 +42,37 @@ func GetLJTop(country string) []string {
 	rating_req.Params.Country = country
 	rating_req.Params.IsFullText = "0"
 	rating_req.Params.Page = 0
-	rating_req.Params.PageSize = 10
+	rating_req.Params.PageSize = 3
 	rating_req.Id = time.Now().Unix()
 
 	b, err := json.Marshal(rating_req)
 	if err != nil {
 		fmt.Println(err)
-		return []string{}
+		return RatingResponse{}
 	}
 
-	fmt.Println(url.QueryEscape(string(b)))
+	// fmt.Println(url.QueryEscape(string(b)))
 	res, err := http.Get("http://l-api.livejournal.com/__api/?request=" + url.QueryEscape(string(b)))
 	if err != nil {
 		fmt.Println(err)
-		return []string{}
+		return RatingResponse{}
 	}
 
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println(err)
-		return []string{}
+		return RatingResponse{}
 	}
+
+  // fmt.Println(string(body))
 
 	rating_res := RatingResponse{}
 	err = json.Unmarshal(body, &rating_res)
 	if err != nil {
 		fmt.Println(err)
-		return []string{}
+		return RatingResponse{}
 	}
 
-	// fmt.Println(rating_res)
-
-	return []string{}
+	return rating_res
 }

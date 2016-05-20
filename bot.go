@@ -64,12 +64,10 @@ func main() {
 		case req_ljtop.MatchString(update.Message.Text):
 			var msg tgbotapi.MessageConfig
 			rating := ljtop.GetLJTop("cyr")
-			for k, v := range rating {
-				fmt.Printf("[%d]: [%s]\n", k, v)
+			for position, rating_entry := range rating.Result.Rating {
+				msg = tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("%d. %s", position + 1, rating_entry.PostUrl))
+        bot.Send(msg)
 			}
-			msg = tgbotapi.NewMessage(update.Message.Chat.ID, "LJ Rating will be here")
-
-			bot.Send(msg)
 		case req_rating.MatchString(update.Message.Text):
 			var msg tgbotapi.MessageConfig
 			if update.Message.ReplyToMessage != nil {
