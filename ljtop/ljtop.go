@@ -26,11 +26,11 @@ type (
 	}
 
 	RatingResponse struct {
-    Result  struct {
-      Rating  []struct {
-        PostUrl string `json:"post_url"`
-      } `json:"rating"`
-    } `json:"result"`
+		Result struct {
+			Rating []struct {
+				PostUrl string `json:"post_url"`
+			} `json:"rating"`
+		} `json:"result"`
 	}
 )
 
@@ -65,7 +65,7 @@ func GetLJTop(country string) RatingResponse {
 		return RatingResponse{}
 	}
 
-  // fmt.Println(string(body))
+	// fmt.Println(string(body))
 
 	rating_res := RatingResponse{}
 	err = json.Unmarshal(body, &rating_res)

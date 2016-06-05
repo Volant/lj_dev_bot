@@ -64,7 +64,7 @@ func main() {
 		case req_test_feature.MatchString(update.Message.Text):
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "A")
 
-			msg.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(tgbotapi.NewInlineKeyboardRow(tgbotapi.NewInlineKeyboardButtonData("TEST", "data"),tgbotapi.NewInlineKeyboardButtonData("TEST_DATA", "test_data")))
+			msg.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(tgbotapi.NewInlineKeyboardRow(tgbotapi.NewInlineKeyboardButtonData("TEST", "data"), tgbotapi.NewInlineKeyboardButtonData("TEST_DATA", "test_data")))
 
 			// msg.ReplyMarkup = tgbotapi.NewHideKeyboard(true)
 			// tgbotapi.NewReplyKeyboard(tgbotapi.NewKeyboardButtonRow(tgbotapi.NewKeyboardButton("TEST KEYBOARD")))
